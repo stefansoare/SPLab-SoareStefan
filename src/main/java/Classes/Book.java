@@ -1,11 +1,12 @@
 package Classes;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Book {
     private String title;
     private List<Author> authors;
-    private List<Chapter> chapters;
+    private List<Section> chapters;
     private TableOfContents tableOfContents;
 
     public Book(String title) {
@@ -20,18 +21,24 @@ public class Book {
     }
 
     public int createChapter(String name) {
-        Chapter ch=new Chapter(name);
-        this.chapters.add(ch);
-        return this.chapters.indexOf(ch);
+        Section chapter = new Section(name);
+        this.chapters.add(chapter);
+        return this.chapters.indexOf(chapter);
     }
-    public Chapter getChapter(int indexChapter){
+
+    public Section getChapter(int indexChapter) {
         return this.chapters.get(indexChapter);
     }
-    public void print(){
-        System.out.println(title);
-        for(Author a:authors)
-            a.print();
-        for(Chapter c:chapters)
-            c.print();
+    public void addContent(Element content) {
+        this.tableOfContents.add(content);
+    }
+
+    public void print() {
+        System.out.println("Book: " + title);
+        System.out.println("Authors:");
+        for (Author author : authors) {
+            author.print();
+        }
+        tableOfContents.print();
     }
 }

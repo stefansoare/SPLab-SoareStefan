@@ -1,5 +1,8 @@
 package Classes;
 
 public interface Element {
-    String print();
+    void print();
+    void add(Element element);
+    void remove(Element element);
+    Element get(int index);
 }

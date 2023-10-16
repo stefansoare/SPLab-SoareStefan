@@ -35,9 +35,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-# Project exclude paths
-/out/
-/.idea/
-/*.iml
-/.gitignore
