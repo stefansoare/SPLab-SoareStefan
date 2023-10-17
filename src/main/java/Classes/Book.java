@@ -6,31 +6,28 @@ import java.util.List;
 public class Book {
     private String title;
     private List<Author> authors;
-    private List<Section> chapters;
-    private TableOfContents tableOfContents;
+    private List<Section> sections;
 
     public Book(String title) {
         this.title = title;
         this.authors = new ArrayList<>();
-        this.chapters = new ArrayList<>();
-        this.tableOfContents = new TableOfContents();
+        this.sections = new ArrayList<>();
     }
 
     public void addAuthor(Author author) {
         authors.add(author);
     }
 
-    public int createChapter(String name) {
+    public Section createChapter(String name) {
         Section chapter = new Section(name);
-        this.chapters.add(chapter);
-        return this.chapters.indexOf(chapter);
+        sections.add(chapter);
+        return chapter;
     }
 
-    public Section getChapter(int indexChapter) {
-        return this.chapters.get(indexChapter);
-    }
     public void addContent(Element content) {
-        this.tableOfContents.add(content);
+        if (!sections.isEmpty()) {
+            sections.get(sections.size() - 1).add(content);
+        }
     }
 
     public void print() {
@@ -39,6 +36,8 @@ public class Book {
         for (Author author : authors) {
             author.print();
         }
-        tableOfContents.print();
+        for (Section section : sections) {
+            section.print();
+        }
     }
 }
