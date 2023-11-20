@@ -3,11 +3,17 @@ package Classes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TableOfContents implements Element {
+public class Section implements Element {
+    public String title;
     private List<Element> elements = new ArrayList<>();
+
+    public Section(String title) {
+        this.title = title;
+    }
 
     @Override
     public void print() {
+        System.out.println("Section with title: " + this.title);
         for (Element element : elements) {
             element.print();
         }
@@ -28,6 +34,6 @@ public class TableOfContents implements Element {
         if (index >= 0 && index < elements.size()) {
             return elements.get(index);
         }
-        return null; // Or throw an exception to handle invalid index
+        return null;
     }
 }

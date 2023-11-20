@@ -1,37 +1,43 @@
 package Classes;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Book {
     private String title;
     private List<Author> authors;
-    private List<Chapter> chapters;
-    private TableOfContents tableOfContents;
+    private List<Section> sections;
 
     public Book(String title) {
         this.title = title;
         this.authors = new ArrayList<>();
-        this.chapters = new ArrayList<>();
-        this.tableOfContents = new TableOfContents();
+        this.sections = new ArrayList<>();
     }
 
     public void addAuthor(Author author) {
         authors.add(author);
     }
 
-    public int createChapter(String name) {
-        Chapter ch=new Chapter(name);
-        this.chapters.add(ch);
-        return this.chapters.indexOf(ch);
+    public Section createChapter(String name) {
+        Section chapter = new Section(name);
+        sections.add(chapter);
+        return chapter;
     }
-    public Chapter getChapter(int indexChapter){
-        return this.chapters.get(indexChapter);
+
+    public void addContent(Element content) {
+        if (!sections.isEmpty()) {
+            sections.get(sections.size() - 1).add(content);
+        }
     }
-    public void print(){
-        System.out.println(title);
-        for(Author a:authors)
-            a.print();
-        for(Chapter c:chapters)
-            c.print();
+
+    public void print() {
+        System.out.println("Book: " + title);
+        System.out.println("Authors:");
+        for (Author author : authors) {
+            author.print();
+        }
+        for (Section section : sections) {
+            section.print();
+        }
     }
 }
