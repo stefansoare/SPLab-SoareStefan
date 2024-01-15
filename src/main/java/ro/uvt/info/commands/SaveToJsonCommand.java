@@ -11,11 +11,6 @@ import ro.uvt.info.Services.JsonSerializer;
 
 import java.util.List;
 
-
-/**
- * TODO: use T as SaveVisitor type.
- * TODO: Make this command generic for any serializable type.
- */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SaveToJsonCommand implements Command<String, Object> {

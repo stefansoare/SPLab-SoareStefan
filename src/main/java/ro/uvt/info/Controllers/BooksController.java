@@ -3,12 +3,13 @@ package ro.uvt.info.Controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ro.uvt.info.commands.*;
 import ro.uvt.info.Classes.Book;
 import ro.uvt.info.Classes.MyPair;
+import ro.uvt.info.persistence.CrudRepository;
+import ro.uvt.info.Services.AllBooksSubject;
 import ro.uvt.info.Services.BookStatistics;
 import ro.uvt.info.Services.CommandExecutor;
-import ro.uvt.info.commands.*;
-import ro.uvt.info.persistence.CrudRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -22,18 +23,21 @@ public class BooksController {
     private final Command<Book, MyPair<Long, Book>> updateOne;
     private final Command<Void, Long> deleteOne;
     private final CommandExecutor commandExecutor;
+    private final CrudRepository<Book, Long> booksRepository;
+    private final AllBooksSubject allBooksSubject;
 
-    public BooksController(CrudRepository<Book, Long> repository,
-                           CommandExecutor commandExecutor){
+    public BooksController(CrudRepository<Book, Long> bookRepository,
+                           CommandExecutor commandExecutor, AllBooksSubject allBooksSubject
+    ){
 
-//        var repository = new JPACrudRepository<>(booksRepository);
-
-        getAll = new GetAllCommand<Book>(repository);
-        getOne = new FindOneCommand<Book>(repository);
-        addOne = new AddOneCommand<Book>(repository);
-        updateOne = new UpdateOneCommand<Book>(repository);
-        deleteOne = new DeleteOneCommand<Book>(repository);
+        this.booksRepository = bookRepository;
+        getAll = new GetAllCommand<Book>(bookRepository);
+        getOne = new FindOneCommand<Book>(bookRepository);
+        addOne = new AddOneCommand<Book>(bookRepository);
+        updateOne = new UpdateOneCommand<Book>(bookRepository);
+        deleteOne = new DeleteOneCommand<Book>(bookRepository);
         this.commandExecutor = commandExecutor;
+        this.allBooksSubject = allBooksSubject;
     }
 
     @GetMapping("/statistics")
@@ -67,12 +71,13 @@ public class BooksController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> addBook(@RequestBody Book book) {
+    public String addBook(@RequestBody Book book) {
         addOne.setCommandContext(book);
         Book insertedBook =  commandExecutor.execute(addOne);
-        return new ResponseEntity<>(insertedBook, HttpStatus.OK);
+        allBooksSubject.add(book);
+//        return new ResponseEntity<>(insertedBook, HttpStatus.OK);
 //        return new ResponseEntity<>(commandExecutor.executeAsync(addOne), HttpStatus.ACCEPTED);
-
+        return "Book saved [" + insertedBook.getId() + "] " + insertedBook.getTitle();
     }
 
     @PutMapping("/{id}")
