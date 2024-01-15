@@ -1,43 +1,41 @@
 package Classes;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Book {
-    private String title;
-    private List<Author> authors;
-    private List<Section> sections;
+@Getter
+@Setter
+public class Book extends Section implements Visitee {
+
+    private List<Author> authorList;
+
+    public Book(){
+        super("");
+        authorList = new ArrayList<>();
+    }
 
     public Book(String title) {
-        this.title = title;
-        this.authors = new ArrayList<>();
-        this.sections = new ArrayList<>();
+        super(title);
+        authorList = new ArrayList<>();
+    }
+
+    public Book(Book other){
+        super(other.title);
+        this.authorList = new ArrayList<>(other.authorList);
     }
 
     public void addAuthor(Author author) {
-        authors.add(author);
+        this.authorList.add(new Author(author));
     }
 
-    public Section createChapter(String name) {
-        Section chapter = new Section(name);
-        sections.add(chapter);
-        return chapter;
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visitBook(this);
     }
 
-    public void addContent(Element content) {
-        if (!sections.isEmpty()) {
-            sections.get(sections.size() - 1).add(content);
-        }
-    }
-
-    public void print() {
-        System.out.println("Book: " + title);
-        System.out.println("Authors:");
-        for (Author author : authors) {
-            author.print();
-        }
-        for (Section section : sections) {
-            section.print();
-        }
-    }
 }

@@ -1,33 +1,36 @@
 package Classes;
 
+import lombok.Getter;
+
+import javax.swing.plaf.PanelUI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TableOfContents implements Element {
-    private List<Element> elements = new ArrayList<>();
+@Getter
+public class TableOfContents extends Element implements Visitee {
+    private final List<String> entries;
 
-    @Override
-    public void print() {
-        for (Element element : elements) {
-            element.print();
-        }
+    public TableOfContents(){
+        entries = new ArrayList<>();
+    }
+
+    public TableOfContents(TableOfContents other){
+        entries = new ArrayList<>(other.entries);
     }
 
     @Override
-    public void add(Element element) {
-        elements.add(element);
+    public Element clone() {
+        return new TableOfContents(this);
     }
 
     @Override
-    public void remove(Element element) {
-        elements.remove(element);
+    public void accept(Visitor visitor) {
+        visitor.visitTableOfContents(this);
     }
 
-    @Override
-    public Element get(int index) {
-        if (index >= 0 && index < elements.size()) {
-            return elements.get(index);
-        }
-        return null; // Or throw an exception to handle invalid index
+
+    // add name if chapter/subchapter, adds null if paragraph, image, table
+    public void addEntry(String entry){
+        entries.add(entry);
     }
 }

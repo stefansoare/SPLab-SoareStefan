@@ -1,39 +1,41 @@
 package Classes;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
-public class Section implements Element {
-    public String title;
-    private List<Element> elements = new ArrayList<>();
+import java.util.ArrayList;
+@Getter
+@Setter
+public class Section extends Element implements Visitee {
+    protected String title;
+
+    public Section() {
+        title = "";
+        elementList = new ArrayList<>();
+    }
 
     public Section(String title) {
         this.title = title;
+        elementList = new ArrayList<>();
+    }
+
+    public Section(Section other){
+        this.title = other.title;
+        this.elementList = new ArrayList<>(other.elementList);
+    }
+
+
+
+
+
+    @Override
+    public Element clone() {
+        return new Section(this);
     }
 
     @Override
-    public void print() {
-        System.out.println("Section with title: " + this.title);
-        for (Element element : elements) {
-            element.print();
-        }
-    }
-
-    @Override
-    public void add(Element element) {
-        elements.add(element);
-    }
-
-    @Override
-    public void remove(Element element) {
-        elements.remove(element);
-    }
-
-    @Override
-    public Element get(int index) {
-        if (index >= 0 && index < elements.size()) {
-            return elements.get(index);
-        }
-        return null;
+    public void accept(Visitor visitor) {
+        visitor.visitSection(this);
     }
 }
